@@ -20,9 +20,9 @@ jobs:
       run: make check
 
     - uses: actions/upload-artifact@v2
-    with:
-      name: tests-logs-python2
-      path: tests/*.log
+      with:
+        name: tests-logs-python2
+        path: tests/*.log
 
     - name: Checking distribution unit tests
       run: make dist-check
