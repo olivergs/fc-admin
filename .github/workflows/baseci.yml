@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: fedora-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure project
+      run: ./autogen.sh
+
+    - name: Checking unit tests
+      run: make check
+
+    - name: Checking distribution unit tests
+      run: make dist-check
+
+    - name: Generate distribution package
+      run: |
+        make
+        make dist
+
+    - name: Generate RPM package
+      run: |
+        mkdir -p ~/rpmbuild/SOURCES/
+        rm ~/rpmbuild/RPMS/noarch/*
+        cp fleet-commander*.tar.xz ~/rpmbuild/SOURCES/
+        rpmbuild -ba fleet-commander-admin.spec
