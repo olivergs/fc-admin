@@ -51,12 +51,18 @@ fi
 # Dependencies #
 ################
 
-AM_PATH_PYTHON([2],, [:])
-AC_PYTHON_MODULE([pexpect], [mandatory])
-AC_PYTHON_MODULE([dbus], [mandatory])
-AC_PYTHON_MODULE([gi], [mandatory])
-AC_PYTHON_MODULE([libvirt], [mandatory])
-AC_PYTHON_MODULE([dbusmock])
+AC_ARG_WITH([pythonmodulecheck],
+     [AS_HELP_STRING([--with-pythonmodulecheck=yes], [Check for needed python modules])],,
+     [with_pythonmodulecheck=yes])
+
+if test "$with_pythonmodulecheck" = "yes"; then
+  AM_PATH_PYTHON([2],, [:])
+  AC_PYTHON_MODULE([pexpect], [mandatory])
+  AC_PYTHON_MODULE([dbus], [mandatory])
+  AC_PYTHON_MODULE([gi], [mandatory])
+  AC_PYTHON_MODULE([libvirt], [mandatory])
+  AC_PYTHON_MODULE([dbusmock])
+fi
 
 # libexecdir expansion for .desktop file
 # TODO: Make xdgconfigdir parametric
