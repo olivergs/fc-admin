@@ -12,8 +12,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Configure project
-      run: ./autogen.sh
+    # Python 2
+    - name: Configure project for python 2
+      run: PYTHON=python2 ./autogen.sh
 
     - name: Checking unit tests
       run: make check
@@ -26,9 +27,17 @@ jobs:
         make
         make dist
 
-    - name: Generate RPM package
+    # Python 3
+    - name: Configure project for python 3
+      run: PYTHON=python3 ./autogen.sh
+
+    - name: Checking unit tests
+      run: make check
+
+    - name: Checking distribution unit tests
+      run: make dist-check
+
+    - name: Generate distribution package
       run: |
-        mkdir -p ~/rpmbuild/SOURCES/
-        rm ~/rpmbuild/RPMS/noarch/*
-        cp fleet-commander*.tar.xz ~/rpmbuild/SOURCES/
-        rpmbuild -ba fleet-commander-admin.spec
+        make
+        make dist
