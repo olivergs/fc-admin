@@ -9,21 +9,23 @@ on:
 jobs:
   Check:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["python2", "python3"]
     steps:
     - uses: actions/checkout@v2
 
-    # Python 2
-    - name: Configure project for python 2
-      run: PYTHON=python2 ./autogen.sh
+    - name: Configure project for ${{ matrix.node }}
+      run: PYTHON=${{ matrix.node }} ./autogen.sh
 
     - name: Checking unit tests
       continue-on-error: true
       run: make check
 
     - uses: actions/upload-artifact@v2
-      name: Upload generated logs on tests check for Python 2
+      name: Upload generated logs on tests check
       with:
-        name: tests-logs-python2
+        name: tests-logs-${{ matrix.node }}
         path: tests/*.log
 
     - name: Checking distribution unit tests
@@ -31,9 +33,9 @@ jobs:
       run: make dist-check
 
     - uses: actions/upload-artifact@v2
-      name: Upload generated logs on distribution tests check for Python 2
+      name: Upload generated logs on distribution tests check for ${{ matrix.node }}
       with:
-        name: dist-tests-logs-python2
+        name: dist-tests-logs-${{ matrix.node }}
         path: tests/*.log
 
     - name: Generate distribution package
@@ -42,42 +44,7 @@ jobs:
         make dist
 
     - uses: actions/upload-artifact@v2
-      name: Upload generated distribution package for Python 2
+      name: Upload generated distribution package for ${{ matrix.node }}
       with:
-        name: dist-python2
-        path: fleet-commander*.xz
-
-    # Python 3
-    - name: Configure project for python 3
-      run: PYTHON=python3 ./autogen.sh
-
-    - name: Checking unit tests
-      continue-on-error: true
-      run: make check
-
-    - uses: actions/upload-artifact@v2
-      name: Upload generated logs on tests check for Python 3
-      with:
-        name: tests-logs-python3
-        path: tests/*.log
-
-    - name: Checking distribution unit tests
-      continue-on-error: true
-      run: make dist-check
-
-    - uses: actions/upload-artifact@v2
-      name: Upload generated logs on distribution tests check for Python 3
-      with:
-        name: dist-tests-logs-python3
-        path: tests/*.log
-
-    - name: Generate distribution package
-      run: |
-        make
-        make dist
-
-    - uses: actions/upload-artifact@v2
-      name: Upload generated distribution package for Python 3
-      with:
-        name: dist-python3
+        name: dist-${{ matrix.node }}
         path: fleet-commander*.xz
