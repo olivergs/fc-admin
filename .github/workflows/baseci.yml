@@ -80,4 +80,4 @@ jobs:
       name: Upload generated distribution package for Python 3
       with:
         name: dist-python3
-        path: *.xz
+        path: fleet-commander*.xz
