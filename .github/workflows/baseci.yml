@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  Configure:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -17,6 +17,7 @@ jobs:
       run: PYTHON=python2 ./autogen.sh
 
     - name: Checking unit tests
+      continue-on-error: true
       run: make check
 
     - uses: actions/upload-artifact@v2
@@ -25,24 +26,53 @@ jobs:
         path: tests/*.log
 
     - name: Checking distribution unit tests
+      continue-on-error: true
       run: make dist-check
+
+    - uses: actions/upload-artifact@v2
+    with:
+      name: dist-tests-logs-python2
+      path: tests/*.log
 
     - name: Generate distribution package
       run: |
         make
         make dist
 
-    # Python 3
+    - uses: actions/upload-artifact@v2
+    with:
+      name: dist-python2
+      path: *.xz
+
+
+    # Python 2
     - name: Configure project for python 3
       run: PYTHON=python3 ./autogen.sh
 
     - name: Checking unit tests
+      continue-on-error: true
       run: make check
 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: tests-logs-python3
+        path: tests/*.log
+
     - name: Checking distribution unit tests
+      continue-on-error: true
       run: make dist-check
+
+    - uses: actions/upload-artifact@v2
+    with:
+      name: dist-tests-logs-python3
+      path: tests/*.log
 
     - name: Generate distribution package
       run: |
         make
         make dist
+
+    - uses: actions/upload-artifact@v2
+    with:
+      name: dist-python3
+      path: *.xz
