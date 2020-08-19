@@ -14,7 +14,7 @@ jobs:
 
     # Python 2
     - name: Configure project for python 2
-      run: PYTHON=python2 ./autogen-ci.sh
+      run: PYTHON=python2 ./autogen.sh
 
     - name: Checking unit tests
       run: make check
@@ -29,7 +29,7 @@ jobs:
 
     # Python 3
     - name: Configure project for python 3
-      run: PYTHON=python3 ./autogen-ci.sh
+      run: PYTHON=python3 ./autogen.sh
 
     - name: Checking unit tests
       run: make check
